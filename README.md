@@ -14,5 +14,8 @@ MDG Test Automation
 > #### HEADER
 > - Run *yarn header*
 > ---
-> #### LANDING 
+> #### FOOTER 
 > - WIP
+> --- 
+> #### LANDING
+> - NEXT
