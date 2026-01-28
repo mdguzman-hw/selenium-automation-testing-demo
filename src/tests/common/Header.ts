@@ -1,6 +1,6 @@
 import { appendFile } from 'node:fs/promises';
-import { Browser, Builder, By, WebDriver } from 'selenium-webdriver';
-import { CLICK_DELAY, HEADER, HOMEWEB_LANDING_URL_EN, HOMEWEB_LANDING_URL_FR } from '../../Constants';
+import { By, WebDriver } from 'selenium-webdriver';
+import { CLICK_DELAY, HEADER } from '../../Constants';
 import { generateSummary, generateLogFileName } from '../../Utility';
 
 /**
@@ -11,120 +11,134 @@ export class Header {
      * Member Variables
      */
     private chromeDriver: WebDriver;
-    private readonly locale: string;
     private readonly logFilename: string;
     private readonly totalTests: number;
+    private readonly targetURL: string;
 
     private startTime: number;
+    private endTime: number;
+    private totalTime: number;
     private passCounter: number;
     private failCounter: number;
-    private targetURL: string;
+    private message: string;
+
+    private readonly LABEL_LOGO: string;
+    private readonly LABEL_TOGGLE: string;
+    private readonly LABEL_BUTTON: string;
+
+    private readonly ID_LOGO: string;
+    private readonly ID_TOGGLE: string;
+    private readonly ID_BUTTON: string;
 
     /**
      * Constructor
      */
-    constructor(locale: string) {
-        this.chromeDriver = new Builder().forBrowser(Browser.CHROME).build();
-        this.locale = locale;
-        this.logFilename = generateLogFileName(this.locale);
+    constructor(locale: string, driver: WebDriver, target: string) {
+        console.log('Header::constructor()');
+        this.chromeDriver = driver;
+        this.logFilename = generateLogFileName(`header-${locale}`);
         this.totalTests = 3;
 
         this.startTime = 0;
+        this.endTime = 0;
+        this.totalTime = 0;
         this.passCounter = 0;
         this.failCounter = 0;
-        this.targetURL = ''
-    }
+        this.targetURL = target;
+        this.message = ''
+
+        switch (locale) {
+            case 'fr':
+                this.LABEL_LOGO = HEADER.FR_LOGO;
+                this.LABEL_TOGGLE = HEADER.FR_TOGGLE;
+                this.LABEL_BUTTON = HEADER.FR_BUTTON;
+                this.ID_LOGO = 'HEADER-ANON-FR-002';
+                this.ID_TOGGLE = 'HEADER-ANON-FR-003';
+                this.ID_BUTTON = 'HEADER-ANON-FR-004';
+                break;
+            case 'en':
+            default:
+                this.LABEL_LOGO = HEADER.EN_LOGO;
+                this.LABEL_TOGGLE = HEADER.EN_TOGGLE;
+                this.LABEL_BUTTON = HEADER.EN_BUTTON;
+                this.ID_LOGO = 'HEADER-ANON-EN-002';
+                this.ID_TOGGLE = 'HEADER-ANON-EN-003';
+                this.ID_BUTTON = 'HEADER-ANON-EN-004';
+                break;
+        }
+    }// End of constructor()
+
+    private async findElements() {
+        console.log('Header::findElements()');
+        try {
+        }
+        catch (error: any) {
+            console.log('Header:findElements->onFailure', error);
+        }
+    }// End of findElements()
 
     private async runStep(cssSelector: string, stepCode: string) {
+        console.log(`${stepCode}->START`);
         try {
             const element = await this.chromeDriver.findElement(By.css(cssSelector));
             await element.click();
-
-            const message = `${stepCode}->success\n`;
-            await appendFile(this.logFilename, message);
+            const success_message = `${stepCode}->success`;
+            console.log(success_message);
+            await appendFile(this.logFilename, success_message);
             this.passCounter += 1;
         } catch (error: any) {
-            const message = `${stepCode}->onFailure ${error}\n`;
-            await appendFile(this.logFilename, message);
+            const fail_message = `${stepCode}->onFailure ${error}`;
+            console.log(fail_message);
+            await appendFile(this.logFilename, fail_message);
             this.failCounter += 1;
         } finally {
-            // Always reset to homepage
+            // Reset page to original target
+            console.log(`${stepCode}->END`);
             await this.chromeDriver.get(this.targetURL);
         }
-    }
+    }// End of runStep()
 
-    // TODO: FR tests
     public async runTests() {
-
-        let LABEL_LOGO = '';
-        let LABEL_TOGGLE = '';
-        let LABEL_BUTTON = '';
-
-        let ID_LOGO = '';
-        let ID_TOGGLE = '';
-        let ID_BUTTON = '';
-
-        switch (this.locale) {
-            case 'en':
-                this.targetURL = HOMEWEB_LANDING_URL_EN;
-                LABEL_LOGO = HEADER.EN_LOGO;
-                LABEL_TOGGLE = HEADER.EN_TOGGLE;
-                LABEL_BUTTON = HEADER.EN_BUTTON;
-                ID_LOGO = 'HEADER-ANON-EN-002';
-                ID_TOGGLE = 'HEADER-ANON-EN-003';
-                ID_BUTTON = 'HEADER-ANON-EN-004';
-                break;
-            case 'fr':
-                this.targetURL = HOMEWEB_LANDING_URL_FR;
-                LABEL_LOGO = HEADER.FR_LOGO;
-                LABEL_TOGGLE = HEADER.FR_TOGGLE;
-                LABEL_BUTTON = HEADER.FR_BUTTON;
-                ID_LOGO = 'HEADER-ANON-FR-002';
-                ID_TOGGLE = 'HEADER-ANON-FR-003';
-                ID_BUTTON = 'HEADER-ANON-FR-004';
-                break;
-        }
-
+        const startMessage = `Header::runTests::targetURL->${this.targetURL}\n`
+        console.log(startMessage)
         this.startTime = Date.now();
         try {
-            const startMessage = `Header::run::targetURL->${this.targetURL}\n`
             await appendFile(this.logFilename, startMessage);
-
             await this.chromeDriver.sleep(CLICK_DELAY);
             await this.runStep(
-                LABEL_LOGO,
-                ID_LOGO
+                this.LABEL_LOGO,
+                this.ID_LOGO
             );
-
             await this.chromeDriver.sleep(CLICK_DELAY);
             await this.runStep(
-                LABEL_TOGGLE,
-                ID_TOGGLE
+                this.LABEL_TOGGLE,
+                this.ID_TOGGLE
             );
-
             await this.chromeDriver.sleep(CLICK_DELAY);
             await this.runStep(
-                LABEL_BUTTON,
-                ID_BUTTON
+                this.LABEL_BUTTON,
+                this.ID_BUTTON
             );
-
             await this.chromeDriver.sleep(CLICK_DELAY);
             await this.finish();
         } catch (error: any) {
-            await appendFile(this.logFilename, `Header::error->${error}\n`);
-            await this.chromeDriver.quit();
+            const fail_message = `Header::runTests->onFailure\n${error}\n`;
+            await appendFile(this.logFilename, fail_message);
         }
-    }
+    }// End of runTests()
 
     private async finish() {
         const endTime = Date.now();
+        const totalTime = endTime - this.startTime;
+
         const summary = generateSummary(
             this.totalTests,
             this.passCounter,
             this.failCounter,
-            endTime - this.startTime
+            totalTime
         );
+
         await appendFile(this.logFilename, summary);
-        await this.chromeDriver.quit();
-    }
-}
+    }// End of finish()
+}// End of class
+// End of file

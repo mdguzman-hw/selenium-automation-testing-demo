@@ -1,4 +1,4 @@
-export function generateLogFileName(locale: string) {
+export function generateLogFileName(prefix: string) {
     let logFilename = ''
     const LOGS_DIRECTORY = 'logs';
 
@@ -23,7 +23,7 @@ export function generateLogFileName(locale: string) {
         // const exists = await open(LOGS_DIRECTORY);
         // if (exists) {
             // return exists;
-            logFilename = `${LOGS_DIRECTORY}/header-${locale}-${dateStr}_${timeStr}.txt`;
+            logFilename = `${LOGS_DIRECTORY}/${prefix}-${dateStr}_${timeStr}.txt`;
             return logFilename;
         // }
         // for await (const dirent of dir)
@@ -39,5 +39,5 @@ export function generateLogFileName(locale: string) {
 }
 
 export function generateSummary(total: number, pass: number, fail: number, time: number) {
-    return `\nSUMMARY\nTOTAL: ${total}\nPASS: ${pass}\nFAIL: ${fail}\nTIME TAKEN: ${time}ms\n\nEND`
+    return `\nSUMMARY\nTOTAL: ${total}\nPASS: ${pass}\nFAIL: ${fail}\nTIME TAKEN: ${time}ms\n`
 }

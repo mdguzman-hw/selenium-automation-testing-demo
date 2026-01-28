@@ -7,7 +7,6 @@
     "selenium-webdriver": "^4.40.0"
   },
   "scripts": {
-    "header-en": "npx ts-node /opt/sandbox/selenium-automation-demo/src/tests/common/header/header-anon-en",
     "smoke": "npx ts-node /opt/sandbox/selenium-automation-demo/src/tests/smoke"
   },
   "devDependencies": {
