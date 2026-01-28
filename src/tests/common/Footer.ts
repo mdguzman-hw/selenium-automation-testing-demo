@@ -1,25 +1,21 @@
-import { appendFile } from 'node:fs/promises';
-import { By, WebDriver } from 'selenium-webdriver';
-import { CLICK_DELAY, FOOTER } from '../../Constants';
-import { generateSummary, generateLogFileName } from '../../Utility';
+/* MDG 2026 */
 
 /**
- * Footer
+ * Imports
  */
-export class Footer {
+import { appendFile } from 'node:fs/promises';
+import { BaseTest } from './BaseTest';
+import { By, WebDriver } from 'selenium-webdriver';
+import { CLICK_DELAY, COMPONENT, FOOTER } from '../../Constants';
+import { generateSummary } from '../../Utility';
+
+/**
+ * Footer Tests
+ */
+export class Footer extends BaseTest {
     /**
-     * Member Variables
+     * Member Variables - Footer Elements
      */
-    private chromeDriver: WebDriver;
-    private readonly originalWindow: string;
-    private readonly logFilename: string;
-    private readonly targetURL: string;
-
-    private startTime: number;
-    public testTotal: number;
-    public passed: number;
-    public failed: number;
-
     private readonly LABEL_ABOUT: string;
     private readonly LABEL_TERMS: string;
     private readonly LABEL_PRIVACY: string;
@@ -31,19 +27,16 @@ export class Footer {
 
     /**
      * Constructor
+     * @param locale {string}
+     * @param driver {WebDriver}
+     * @param target {string}
+     * @param handle {string}
      */
     constructor(locale: string, driver: WebDriver, target: string, handle: string) {
+        super(locale, driver, target, COMPONENT.FOOTER, handle);
         console.log('Footer::constructor()');
-        this.chromeDriver = driver;
-        this.logFilename = generateLogFileName(`footer-${locale}`);
-        this.targetURL = target;
-        this.originalWindow = handle;
 
-        this.testTotal = 0;
-        this.startTime = 0;
-        this.passed = 0;
-        this.failed = 0;
-
+        // Set up Footer elements, based on locale
         switch (locale) {
             case 'fr':
                 this.LABEL_ABOUT = FOOTER.FR_ABOUT;
@@ -69,63 +62,84 @@ export class Footer {
         }
     }// End of constructor()
 
+    /**
+     * Action: Run Test Step
+     * @param cssSelector {string}
+     * @param stepCode {string}
+     */
     private async runStep(cssSelector: string, stepCode: string) {
         console.log(`${stepCode}->START`);
         try {
+            // 1: Find element
             const element = await this.chromeDriver.findElement(By.css(cssSelector));
+
+            // 2: Click element
             await element.click();
 
+            // 3: Pass - Update passed tests and log result
+            this.passed += 1;
             const success_message = `${stepCode}->success\n`;
             await appendFile(this.logFilename, success_message);
-            this.passed += 1;
         }
         catch (error: any) {
+            // 4: Fail - Update failed tests and log result
+            this.failed += 1;
             const fail_message = `${stepCode}->onFailure ${error}\n`;
             console.log(fail_message);
             await appendFile(this.logFilename, fail_message);
-            this.failed += 1;
         }
         finally {
+            // 5: Reset browser state
             this.testTotal += 1;
             console.log(`${stepCode}->END`);
             await this.reset()
         }
     }// End of runStep()
 
+    /**
+     * Action: Run Footer Tests
+     */
     public async runTests() {
         const startMessage = `Footer::runTests::targetURL->${this.targetURL}\n`
         console.log(startMessage)
         this.startTime = Date.now();
+
         try {
-            await this.chromeDriver.executeScript(
-                'window.scrollTo(0, document.body.scrollHeight);'
-            );
             await appendFile(this.logFilename, startMessage);
 
+            // 1: Test - Start
+            // Reset browser state to ensure all elements will be found
+            await this.reset();
+
+            // 2: Test - About
             await this.chromeDriver.sleep(CLICK_DELAY);
             await this.runStep(
                 this.LABEL_ABOUT,
                 this.ID_ABOUT
             );
 
+            // 3: Test - Terms
             await this.chromeDriver.sleep(CLICK_DELAY);
             await this.runStep(
                 this.LABEL_TERMS,
                 this.ID_TERMS
             );
 
+            // 4: Test - Privacy
             await this.chromeDriver.sleep(CLICK_DELAY);
             await this.runStep(
                 this.LABEL_PRIVACY,
                 this.ID_PRIVACY
             );
 
+            // 5: Test - Accessibility
             await this.chromeDriver.sleep(CLICK_DELAY);
             await this.runStep(
                 this.LABEL_ACCESSIBILITY,
                 this.ID_ACCESSIBILITY
             );
 
+            // 6: Test - Finish
             await this.chromeDriver.sleep(CLICK_DELAY);
             await this.finish();
         } catch (error: any) {
@@ -135,10 +149,15 @@ export class Footer {
         }
     }// End of runTests()
 
+    /**
+     * Action: Finish Tests
+     * Set up statistics and results for logging
+     */
     private async finish() {
         const endTime = Date.now();
         const totalTime = endTime - this.startTime;
 
+        // 1: Set up summary
         const summary = generateSummary(
             this.testTotal,
             this.passed,
@@ -146,15 +165,26 @@ export class Footer {
             totalTime
         );
 
+        // 2: Log results
         console.log('Footer::finish')
         await appendFile(this.logFilename, summary);
     }// End of finish()
 
+    /**
+     * Reset - Browser State
+     */
     private async reset() {
-        await this.chromeDriver.switchTo().window(this.originalWindow);
+        // 1: Check to ensure browser is looking at the correct window
+        if ( this.originalWindow ) {
+            await this.chromeDriver.switchTo().window( this.originalWindow );
+        }
+        // 2: Navigate back to initial target
         await this.chromeDriver.get(this.targetURL);
+
+        // 3: Scroll to the bottom of the page
         await this.chromeDriver.executeScript(
             'window.scrollTo(0, document.body.scrollHeight);'
         );
-    }
-}
+    }// End of reset()
+}// End of class
+// End of file

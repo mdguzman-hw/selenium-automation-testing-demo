@@ -1,3 +1,5 @@
+/* MDG 2026 */
+
 /**
  * General
  */
@@ -19,6 +21,11 @@ const LABEL_SIGN_IN_BUTTON_FR = '[aria-label="Se connecter"]';
 export const enum LANGUAGE {
     ENGLISH = 'en',
     FRENCH = 'fr'
+}
+
+export const enum COMPONENT {
+    HEADER = 'header',
+    FOOTER = 'footer',
 }
 
 export const enum HEADER {
