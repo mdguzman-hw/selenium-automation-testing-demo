@@ -11,13 +11,14 @@ export class Footer {
      * Member Variables
      */
     private chromeDriver: WebDriver;
+    private readonly originalWindow: string;
     private readonly logFilename: string;
-    public readonly totalTests: number;
     private readonly targetURL: string;
 
     private startTime: number;
-    public passCounter: number;
-    public failCounter: number;
+    public testTotal: number;
+    public passed: number;
+    public failed: number;
 
     private readonly LABEL_ABOUT: string;
     private readonly LABEL_TERMS: string;
@@ -31,16 +32,17 @@ export class Footer {
     /**
      * Constructor
      */
-    constructor(locale: string, driver: WebDriver, target: string) {
+    constructor(locale: string, driver: WebDriver, target: string, handle: string) {
         console.log('Footer::constructor()');
         this.chromeDriver = driver;
         this.logFilename = generateLogFileName(`footer-${locale}`);
-        this.totalTests = 4; // TODO: Calculate instead of hard code
         this.targetURL = target;
+        this.originalWindow = handle;
 
+        this.testTotal = 0;
         this.startTime = 0;
-        this.passCounter = 0;
-        this.failCounter = 0;
+        this.passed = 0;
+        this.failed = 0;
 
         switch (locale) {
             case 'fr':
@@ -75,23 +77,21 @@ export class Footer {
 
             const success_message = `${stepCode}->success\n`;
             await appendFile(this.logFilename, success_message);
-            this.passCounter += 1;
-        } catch (error: any) {
+            this.passed += 1;
+        }
+        catch (error: any) {
             const fail_message = `${stepCode}->onFailure ${error}\n`;
             console.log(fail_message);
             await appendFile(this.logFilename, fail_message);
-            this.failCounter += 1;
-        } finally {
-            // Reset page to original target
+            this.failed += 1;
+        }
+        finally {
+            this.testTotal += 1;
             console.log(`${stepCode}->END`);
-            await this.chromeDriver.get(this.targetURL);
-            await this.chromeDriver.executeScript(
-                'window.scrollTo(0, document.body.scrollHeight);'
-            );
+            await this.reset()
         }
     }// End of runStep()
 
-    // TODO: Handle when click opens a new tab - should go back to original tab
     public async runTests() {
         const startMessage = `Footer::runTests::targetURL->${this.targetURL}\n`
         console.log(startMessage)
@@ -140,13 +140,21 @@ export class Footer {
         const totalTime = endTime - this.startTime;
 
         const summary = generateSummary(
-            this.totalTests,
-            this.passCounter,
-            this.failCounter,
+            this.testTotal,
+            this.passed,
+            this.failed,
             totalTime
         );
 
         console.log('Footer::finish')
         await appendFile(this.logFilename, summary);
     }// End of finish()
+
+    private async reset() {
+        await this.chromeDriver.switchTo().window(this.originalWindow);
+        await this.chromeDriver.get(this.targetURL);
+        await this.chromeDriver.executeScript(
+            'window.scrollTo(0, document.body.scrollHeight);'
+        );
+    }
 }
