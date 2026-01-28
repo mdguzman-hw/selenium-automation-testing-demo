@@ -12,20 +12,16 @@ export class Header {
      */
     private chromeDriver: WebDriver;
     private readonly logFilename: string;
-    private readonly totalTests: number;
+    public readonly totalTests: number;
     private readonly targetURL: string;
 
     private startTime: number;
-    private endTime: number;
-    private totalTime: number;
-    private passCounter: number;
-    private failCounter: number;
-    private message: string;
+    public passCounter: number;
+    public failCounter: number;
 
     private readonly LABEL_LOGO: string;
     private readonly LABEL_TOGGLE: string;
     private readonly LABEL_BUTTON: string;
-
     private readonly ID_LOGO: string;
     private readonly ID_TOGGLE: string;
     private readonly ID_BUTTON: string;
@@ -37,15 +33,12 @@ export class Header {
         console.log('Header::constructor()');
         this.chromeDriver = driver;
         this.logFilename = generateLogFileName(`header-${locale}`);
-        this.totalTests = 3;
+        this.totalTests = 3; // TODO: Calculate instead of hard code
+        this.targetURL = target;
 
         this.startTime = 0;
-        this.endTime = 0;
-        this.totalTime = 0;
         this.passCounter = 0;
         this.failCounter = 0;
-        this.targetURL = target;
-        this.message = ''
 
         switch (locale) {
             case 'fr':
@@ -82,6 +75,7 @@ export class Header {
         try {
             const element = await this.chromeDriver.findElement(By.css(cssSelector));
             await element.click();
+
             const success_message = `${stepCode}->success`;
             console.log(success_message);
             await appendFile(this.logFilename, success_message);
@@ -99,11 +93,12 @@ export class Header {
     }// End of runStep()
 
     public async runTests() {
-        const startMessage = `Header::runTests::targetURL->${this.targetURL}\n`
+        const startMessage = `Header::runTests::targetURL->${this.targetURL}`
         console.log(startMessage)
         this.startTime = Date.now();
         try {
             await appendFile(this.logFilename, startMessage);
+
             await this.chromeDriver.sleep(CLICK_DELAY);
             await this.runStep(
                 this.LABEL_LOGO,
@@ -122,7 +117,8 @@ export class Header {
             await this.chromeDriver.sleep(CLICK_DELAY);
             await this.finish();
         } catch (error: any) {
-            const fail_message = `Header::runTests->onFailure\n${error}\n`;
+            const fail_message = `Header::runTests->onFailure\n${error}`;
+            console.log(fail_message)
             await appendFile(this.logFilename, fail_message);
         }
     }// End of runTests()
@@ -138,6 +134,7 @@ export class Header {
             totalTime
         );
 
+        console.log('Header::finish')
         await appendFile(this.logFilename, summary);
     }// End of finish()
 }// End of class
