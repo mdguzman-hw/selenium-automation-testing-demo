@@ -35,6 +35,8 @@ async function smoke() {
     const chromeDriver = new Builder().forBrowser(Browser.CHROME).setChromeOptions(options).build();
 
     try {
+        const windowHandle = await chromeDriver.getWindowHandle();
+
         /**
          * 3: EN Tests
          */
@@ -46,7 +48,7 @@ async function smoke() {
         await header_en.runTests();
 
         // 3.3: Footer
-        const footer_en = new Footer(LANGUAGE.ENGLISH, chromeDriver, TARGET_URL_EN);
+        const footer_en = new Footer(LANGUAGE.ENGLISH, chromeDriver, TARGET_URL_EN, windowHandle);
         await footer_en.runTests();
 
         /**
@@ -60,15 +62,15 @@ async function smoke() {
         await header_fr.runTests();
 
         // 4.3: Footer
-        const footer_fr = new Footer(LANGUAGE.FRENCH, chromeDriver, TARGET_URL_FR);
+        const footer_fr = new Footer(LANGUAGE.FRENCH, chromeDriver, TARGET_URL_FR, windowHandle);
         await footer_fr.runTests();
 
         /**
          * 5: Generate Report
          */
-        const total = header_en.totalTests + header_fr.totalTests + footer_en.totalTests + footer_fr.totalTests;
-        const pass = header_en.passCounter + header_fr.passCounter + footer_en.passCounter + footer_fr.passCounter;
-        const fail = header_en.failCounter + header_fr.failCounter + footer_en.failCounter + footer_fr.failCounter;
+        const total = header_en.testTotal + header_fr.testTotal + footer_en.testTotal + footer_fr.testTotal;
+        const pass = header_en.passed + header_fr.passed + footer_en.passed + footer_fr.passed;
+        const fail = header_en.failed + header_fr.failed + footer_en.failed + footer_fr.failed;
 
         console.log(generateReport(total, pass, fail));
     }
