@@ -19,9 +19,9 @@ export class BaseTest {
     protected targetURL: string;
 
     protected startTime: number;
-    protected testTotal: number;
-    protected passed: number;
-    protected failed: number;
+    public testTotal: number;
+    public passed: number;
+    public failed: number;
 
     /**
      * Constructor
