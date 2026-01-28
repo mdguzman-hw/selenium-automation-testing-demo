@@ -41,3 +41,7 @@ export function generateLogFileName(prefix: string) {
 export function generateSummary(total: number, pass: number, fail: number, time: number) {
     return `\nSUMMARY\nTOTAL: ${total}\nPASS: ${pass}\nFAIL: ${fail}\nTIME TAKEN: ${time}ms\n`
 }
+
+export function generateReport(total: number, pass: number, fail: number) {
+    return `\nREPORT\nTOTAL: ${total}\nPASS: ${pass}\nFAIL: ${fail}\n\n`
+}
