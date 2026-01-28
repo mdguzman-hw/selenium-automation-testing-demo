@@ -1,3 +1,5 @@
+/* MDG 2026 */
+
 export function generateLogFileName(prefix: string) {
     let logFilename = ''
     const LOGS_DIRECTORY = 'logs';

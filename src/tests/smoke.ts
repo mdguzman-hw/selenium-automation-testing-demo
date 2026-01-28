@@ -1,12 +1,14 @@
+/* MDG 2026 */
+
 /**
  * Imports
  */
 import { Browser, Builder } from 'selenium-webdriver';
 import chrome from 'selenium-webdriver/chrome';
 import { Footer } from './common/Footer';
-import { Header } from './common/Header';
-import { HEADER, HOMEWEB_LANDING_URL_EN, HOMEWEB_LANDING_URL_FR, LANGUAGE } from '../Constants';
 import { generateReport } from '../Utility';
+import { Header } from './common/Header';
+import { HOMEWEB_LANDING_URL_EN, HOMEWEB_LANDING_URL_FR, LANGUAGE } from '../Constants';
 
 /**
  * Smoke - Test
@@ -21,20 +23,18 @@ async function smoke() {
     const options = new chrome.Options();
     options.addArguments(
         '--incognito',
-        // '--start-maximized',
+        '--start-maximized',
     );
 
     // 1.2 Variables
     const TARGET_URL_EN = HOMEWEB_LANDING_URL_EN;
     const TARGET_URL_FR = HOMEWEB_LANDING_URL_FR;
-    let total = 0;
-    let pass = 0;
-    let fail = 0;
 
     // 2: Launch browser
     const chromeDriver = new Builder().forBrowser(Browser.CHROME).setChromeOptions(options).build();
 
     try {
+        // 2.1 Get browser window
         const windowHandle = await chromeDriver.getWindowHandle();
 
         /**
@@ -71,8 +71,7 @@ async function smoke() {
         const total = header_en.testTotal + header_fr.testTotal + footer_en.testTotal + footer_fr.testTotal;
         const pass = header_en.passed + header_fr.passed + footer_en.passed + footer_fr.passed;
         const fail = header_en.failed + header_fr.failed + footer_en.failed + footer_fr.failed;
-
-        console.log(generateReport(total, pass, fail));
+        console.log(generateReport(total, pass, fail))
     }
     catch (error: any) {
         console.log('smoke->onFailure', error);

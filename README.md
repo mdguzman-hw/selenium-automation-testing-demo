@@ -1,6 +1,9 @@
 # Selenium Automation Testing - DEMO
-MDG Test Automation
+MDG 2026 
 
+Test Automation
+
+---
 # Environment Versions
 - node v25.2.1
 - yarn 1.22.22
@@ -13,7 +16,12 @@ MDG Test Automation
 > ---
 > #### SMOKE
 > - Run *yarn smoke*
-> - [WIP] - HEADER - EN
+> - [DONE] - HEADER - EN
+> - [DONE] - HEADER - FR
+> - [DONE] - FOOTER - EN
+> - [DONE] - FOOTER - FR
+> - [WIP] - PUBLIC - ANON - LANDING - EN
+> - [WIP] - PUBLIC - ANON - LANDING - FR
 > ---
 > #### REGRESSION 
 > - NEXT
