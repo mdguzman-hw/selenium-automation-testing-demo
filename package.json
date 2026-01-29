@@ -1,5 +1,5 @@
 {
-  "name": "selenium-automation-demo",
+  "name": "selenium-automation-homeweb-demo",
   "version": "1.0.0",
   "main": "index.ts",
   "private": true,
@@ -7,7 +7,7 @@
     "selenium-webdriver": "^4.40.0"
   },
   "scripts": {
-    "smoke": "npx ts-node /opt/sandbox/selenium-automation-demo/src/tests/smoke"
+    "smoke": "npx ts-node /opt/sandbox/selenium-automation-homeweb-demo/src/tests/smoke"
   },
   "devDependencies": {
     "@types/selenium-webdriver": "^4.35.5",
