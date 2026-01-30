@@ -6,24 +6,30 @@
 import { appendFile } from 'node:fs/promises';
 import { BaseTest } from './BaseTest';
 import { By, WebDriver } from 'selenium-webdriver';
-import { CLICK_DELAY, TAG, FOOTER, LANGUAGE } from '../common/Constants';
-import { generateSummary } from '../common/Utility';
+import { CLICK_DELAY, TAG, LANGUAGE, HOMEWEB_DOMAIN, HOMEWOOD_DOMAIN } from '../common/Constants';
+import { ElementType } from '../types/ElementType';
+import { generateSummary, translate } from '../common/Utility';
+
+/**
+ * Interface
+ */
+interface FooterElements {
+    about: ElementType,
+    accessibility: ElementType
+    privacy: ElementType,
+    terms: ElementType,
+}
 
 /**
  * Footer Tests
  */
 export class Footer extends BaseTest {
     /**
-     * Member Variables - Footer Elements
+     * Member Variables
      */
-    private readonly LABEL_ABOUT: string;
-    private readonly LABEL_TERMS: string;
-    private readonly LABEL_PRIVACY: string;
-    private readonly LABEL_ACCESSIBILITY: string;
-    private readonly ID_ABOUT: string;
-    private readonly ID_TERMS: string;
-    private readonly ID_PRIVACY: string;
-    private readonly ID_ACCESSIBILITY: string;
+    private readonly FOOTER: FooterElements;
+    private windowHandles: string[];
+    // private newTab: string;
 
     /**
      * Constructor
@@ -36,62 +42,106 @@ export class Footer extends BaseTest {
         super(locale, driver, target, TAG.FOOTER, handle);
         console.log('Footer::constructor()');
 
-        // Set up Footer elements, based on locale
-        switch (locale) {
-            case 'fr':
-                this.LABEL_ABOUT = FOOTER.FR_ABOUT;
-                this.LABEL_TERMS = FOOTER.FR_TERMS;
-                this.LABEL_PRIVACY = FOOTER.FR_PRIVACY;
-                this.LABEL_ACCESSIBILITY = FOOTER.FR_ACCESSIBILITY
-                this.ID_ABOUT = 'FOOTER-ANON-FR-002';
-                this.ID_TERMS = 'FOOTER-ANON-FR-003';
-                this.ID_PRIVACY = 'FOOTER-ANON-FR-004';
-                this.ID_ACCESSIBILITY = 'FOOTER-ANON-FR-005';
-                break;
-            case 'en':
-            default:
-                this.LABEL_ABOUT = FOOTER.EN_ABOUT;
-                this.LABEL_TERMS = FOOTER.EN_TERMS;
-                this.LABEL_PRIVACY = FOOTER.EN_PRIVACY;
-                this.LABEL_ACCESSIBILITY = FOOTER.EN_ACCESSIBILITY;
-                this.ID_ABOUT = 'FOOTER-ANON-EN-002';
-                this.ID_TERMS = 'FOOTER-ANON-EN-003';
-                this.ID_PRIVACY = 'FOOTER-ANON-EN-004';
-                this.ID_ACCESSIBILITY = 'FOOTER-ANON-EN-005';
-                break;
+        this.FOOTER = {
+            about: {
+                id: translate('footer_id_about'),
+                identifier: translate('footer_identifier_about'),
+                route: translate('footer_route_about')
+            },
+            accessibility: {
+                id: translate('footer_id_accessibility'),
+                identifier: translate('footer_identifier_accessibility'),
+                route: translate('footer_route_accessibility')
+            },
+            privacy: {
+                id: translate('footer_id_privacy'),
+                identifier: translate('footer_identifier_privacy'),
+                route: translate('footer_route_privacy')
+            },
+            terms: {
+                id: translate('footer_id_terms'),
+                identifier: translate('footer_identifier_terms'),
+                route: translate('footer_route_terms')
+            }
         }
+
+        this.windowHandles = [];
     }// End of constructor()
 
     /**
      * Action: Run Test Step
-     * @param cssSelector {string}
-     * @param stepCode {string}
+     * @param testElement {ElementType}
      */
-    private async runStep(cssSelector: string, stepCode: string) {
-        console.log(`${stepCode}->START`);
+    private async runStep(testElement: ElementType) {
+        const {id, identifier, route} = testElement;
+        let url: URL;
+
+        console.log(`${id}->START->${identifier}`);
         try {
             // 1: Find element
-            const element = await this.chromeDriver.findElement(By.css(cssSelector));
+            const element = await this.chromeDriver.findElement(By.linkText(identifier));
 
             // 2: Click element
+            await this.chromeDriver.sleep(CLICK_DELAY);
             await element.click();
 
-            // 3: Pass - Update passed tests and log result
-            this.passed += 1;
-            const success_message = `${stepCode}->success\n`;
-            await appendFile(this.logFilename, success_message);
+            /**
+             * 3: Validate click
+             * TODO: Reverse logic. do fail case first!!
+             */
+            // 3.1: Set up clicked URL
+            url = new URL(await this.chromeDriver.getCurrentUrl());
+
+            // 3.2: Check if new tab was opened
+            const handles = await this.chromeDriver.getAllWindowHandles()
+            if (handles.length > 1) {
+                // 3.2.1: New tab opened, remain on new tab
+                await this.chromeDriver.switchTo().window( handles[handles.length - 1] );
+
+                // 3.2.2: Interrogate new tab URL
+                url = new URL(await this.chromeDriver.getCurrentUrl());
+                if (url.origin === HOMEWOOD_DOMAIN) {
+                    if (url.pathname === route) {
+                        // 3.2.3: Test - Pass (close new tab)
+                        this.passed += 1;
+                        const success_message = `${id}->success\n`;
+                        await appendFile(this.logFilename, success_message);
+                    }
+                }
+                await this.chromeDriver.close();
+            }
+            // 3.3 No new tab opened
+            else {
+                // 3.4: Domain Check - Homeweb
+                if (url.origin === HOMEWEB_DOMAIN) {
+                    if (url.pathname == route) {
+                        // 3.5: Test - Pass
+                        this.passed += 1;
+                        const success_message = `${id}->success\n`;
+                        await appendFile(this.logFilename, success_message);
+                    }
+                    else {
+                        throw new Error('UNKNOWN PATH')
+                    }
+                }
+                // 3.6: Domain Check - UNKNOWN
+                else {
+                    throw new Error('UNKNOWN ORIGIN')
+                }
+            }
+
         }
         catch (error: any) {
-            // 4: Fail - Update failed tests and log result
+            // 4: Test - Fail
             this.failed += 1;
-            const fail_message = `${stepCode}->onFailure ${error}\n`;
+            const fail_message = `${id}->onFailure ${error}\n`;
             console.log(fail_message);
             await appendFile(this.logFilename, fail_message);
         }
         finally {
             // 5: Reset browser state
             this.testTotal += 1;
-            console.log(`${stepCode}->END`);
+            console.log(`${id}->END`);
             await this.reset()
         }
     }// End of runStep()
@@ -112,32 +162,16 @@ export class Footer extends BaseTest {
             await this.reset();
 
             // 2: Test - About
-            await this.chromeDriver.sleep(CLICK_DELAY);
-            await this.runStep(
-                this.LABEL_ABOUT,
-                this.ID_ABOUT
-            );
+            await this.runStep(this.FOOTER.about);
 
             // 3: Test - Terms
-            await this.chromeDriver.sleep(CLICK_DELAY);
-            await this.runStep(
-                this.LABEL_TERMS,
-                this.ID_TERMS
-            );
+            await this.runStep(this.FOOTER.terms);
 
             // 4: Test - Privacy
-            await this.chromeDriver.sleep(CLICK_DELAY);
-            await this.runStep(
-                this.LABEL_PRIVACY,
-                this.ID_PRIVACY
-            );
+            await this.runStep(this.FOOTER.privacy);
 
             // 5: Test - Accessibility
-            await this.chromeDriver.sleep(CLICK_DELAY);
-            await this.runStep(
-                this.LABEL_ACCESSIBILITY,
-                this.ID_ACCESSIBILITY
-            );
+            await this.runStep(this.FOOTER.accessibility);
 
             // 6: Test - Finish
             await this.chromeDriver.sleep(CLICK_DELAY);
@@ -152,6 +186,7 @@ export class Footer extends BaseTest {
     /**
      * Action: Finish Tests
      * Set up statistics and results for logging
+     * TODO: try catch
      */
     private async finish() {
         const endTime = Date.now();
@@ -172,12 +207,14 @@ export class Footer extends BaseTest {
 
     /**
      * Reset - Browser State
+     * TODO: try catch
      */
     private async reset() {
         // 1: Check to ensure browser is looking at the correct window
         if ( this.originalWindow ) {
             await this.chromeDriver.switchTo().window( this.originalWindow );
         }
+
         // 2: Navigate back to initial target
         await this.chromeDriver.get(this.targetURL);
 
