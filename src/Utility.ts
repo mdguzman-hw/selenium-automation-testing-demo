@@ -1,6 +1,9 @@
 /* MDG 2026 */
 
-export function generateLogFileName(prefix: string) {
+import { I18n } from 'i18n-js';
+import { LANGUAGE } from './Constants';
+
+export function generateLogFileName( prefix: string) {
     let logFilename = ''
     const LOGS_DIRECTORY = 'logs';
 
@@ -45,5 +48,17 @@ export function generateSummary(total: number, pass: number, fail: number, time:
 }
 
 export function generateReport(total: number, pass: number, fail: number) {
-    return `\nREPORT\nTOTAL: ${total}\nPASS: ${pass}\nFAIL: ${fail}\n`
+    return `REPORT\nTOTAL: ${total}\nPASS: ${pass}\nFAIL: ${fail}\n`
 }
+
+// Translations
+export const i18n = new I18n({
+    [LANGUAGE.ENGLISH]: require('./translations/en.json'),
+    [LANGUAGE.FRENCH]: require('./translations/fr.json'),
+});
+
+export const setLanguage = ( language: LANGUAGE ) => {
+    i18n.locale = language.toString();
+}
+export const translate = ( key: string ) => i18n.t( key );
+
