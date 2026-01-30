@@ -1,0 +1,11 @@
+{
+  "header_identifier_logo": "[aria-label=\"Homewood Logo\"]",
+  "header_identifier_toggle": "[aria-label=\"Toggle language to FR\"]",
+  "header_identifier_button": "[aria-label=\"Sign In\"]",
+  "header_id_logo": "HEADER-ANON-EN-002",
+  "header_id_toggle": "HEADER-ANON-EN-003",
+  "header_id_button": "HEADER-ANON-EN-004",
+  "header_route_logo": "/en",
+  "header_route_toggle": "/fr",
+  "header_route_button": "/en/login"
+}
