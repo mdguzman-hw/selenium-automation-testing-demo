@@ -1,7 +1,5 @@
 /* MDG 2026 */
 
-import { translate } from './Utility';
-
 /**
  * General
  */
