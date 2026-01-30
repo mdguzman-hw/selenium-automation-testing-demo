@@ -53,8 +53,8 @@ export function generateReport(total: number, pass: number, fail: number) {
 
 // Translations
 export const i18n = new I18n({
-    [LANGUAGE.ENGLISH]: require('./translations/en.json'),
-    [LANGUAGE.FRENCH]: require('./translations/fr.json'),
+    [LANGUAGE.ENGLISH]: require('../translations/en.json'),
+    [LANGUAGE.FRENCH]: require('../translations/fr.json'),
 });
 
 export const setLanguage = ( language: LANGUAGE ) => {
