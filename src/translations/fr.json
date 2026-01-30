@@ -1,11 +1,24 @@
 {
-  "header_identifier_logo": "[aria-label=\"Logo Homewood\"]",
-  "header_identifier_toggle": "[aria-label=\"Basculer la langue en EN\"]",
-  "header_identifier_button": "[aria-label=\"Se connecter\"]",
+  "footer_id_about": "FOOTER-ANON-FR-002",
+  "footer_id_accessibility": "FOOTER-ANON-FR-005",
+  "footer_id_privacy": "FOOTER-ANON-FR-004",
+  "footer_id_terms": "FOOTER-ANON-FR-003",
+  "footer_identifier_about": "À propos de Homewood Santé",
+  "footer_identifier_accessibility": "Accessibilité",
+  "footer_identifier_privacy": "Politique de confidentialité",
+  "footer_identifier_terms": "Conditions d'utilisation",
+  "footer_route_about": "/fr/home/about-us/",
+  "footer_route_accessibility": "/fr/accessibility",
+  "footer_route_privacy": "/fr/privacy-policy",
+  "footer_route_terms": "/fr/terms-of-service",
+
+  "header_id_button": "HEADER-ANON-FR-004",
   "header_id_logo": "HEADER-ANON-FR-002",
   "header_id_toggle": "HEADER-ANON-FR-003",
-  "header_id_button": "HEADER-ANON-FR-004",
+  "header_identifier_button": "[aria-label=\"Se connecter\"]",
+  "header_identifier_logo": "[aria-label=\"Logo Homewood\"]",
+  "header_identifier_toggle": "[aria-label=\"Basculer la langue en EN\"]",
+  "header_route_button": "/fr/login",
   "header_route_logo": "/fr",
-  "header_route_toggle": "/en",
-  "header_route_button": "/fr/login"
+  "header_route_toggle": "/en"
 }
