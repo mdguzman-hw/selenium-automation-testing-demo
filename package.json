@@ -8,7 +8,7 @@
     "selenium-webdriver": "^4.40.0"
   },
   "scripts": {
-    "smoke": "npx ts-node /opt/sandbox/selenium-automation-homeweb-demo/src/tests/Smoke"
+    "smoke": "ts-node src/tests/Smoke"
   },
   "devDependencies": {
     "@types/selenium-webdriver": "^4.35.5",
