@@ -16,12 +16,5 @@ Test Automation
 > ---
 > #### SMOKE
 > - Run *yarn smoke*
-> - [DONE] - HEADER - EN
-> - [DONE] - HEADER - FR
-> - [DONE] - FOOTER - EN
-> - [DONE] - FOOTER - FR
-> - [WIP] - PUBLIC - ANON - LANDING - EN
-> - [WIP] - PUBLIC - ANON - LANDING - FR
-> ---
 > #### REGRESSION 
-> - NEXT
+> - WIP
