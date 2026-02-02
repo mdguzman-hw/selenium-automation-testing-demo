@@ -4,12 +4,12 @@
  * Imports
  */
 
-import { ElementType } from '../../types/ElementType';
-import { BaseTest } from '../BaseTest';
-import { CLICK_DELAY, HOMEWEB_DOMAIN, IDENTITY_API_DOMAIN, LANGUAGE, QUANTUM_API_DOMAIN, TAG } from '../../common/Constants';
-import { By, WebDriver, WebElement } from 'selenium-webdriver';
-import { generateSummary, translate } from '../../common/Utility';
 import { appendFile } from 'node:fs/promises';
+import { BaseTest } from '../BaseTest';
+import { By, WebDriver, WebElement } from 'selenium-webdriver';
+import { CLICK_DELAY, FIND, HOMEWEB_DOMAIN, IDENTITY_API_DOMAIN, LANGUAGE, QUANTUM_API_DOMAIN, TAG } from '../../common/Constants';
+import { ElementType } from '../../types/ElementType';
+import { generateSummary, translate } from '../../common/Utility';
 
 /**
  * Interface
@@ -70,13 +70,11 @@ export class PublicLanding extends BaseTest {
                 identifier: translate('public_landing_identifier_resource_3'),
                 route: translate('public_landing_route_resource_3')
             },
-            // TODO: Review toolkit test
             toolkit: {
                 id: translate('public_landing_id_toolkit'),
                 identifier: translate('public_landing_identifier_toolkit'),
                 route: translate('public_landing_route_toolkit')
             },
-            // TODO: Review help number test
             help_number: {
                 id: translate('public_landing_id_help_number'),
                 identifier: translate('public_landing_identifier_help_number'),
@@ -88,23 +86,25 @@ export class PublicLanding extends BaseTest {
     /**
      * Action: Run Test Step
      * @param testElement {ElementType}
+     * @param find {string}
      */
-    private async runStep(testElement: ElementType) {
+    private async runStep(testElement: ElementType, find?: string) {
         const {id, identifier, route} = testElement;
         let url: URL;
+        let element: WebElement;
 
         console.log(`${id}->START->${identifier}`);
         try {
             // 1: Find element
-            let element: WebElement;
-            element = await this.chromeDriver.findElement(By.css(identifier));
-
-            // 1.1: Element not found by css, attempt find by text
-            // TODO: Handle toolkit and phone number
-            // if (!element) {
-            //     console.log('HERE')
-            //     element = await this.chromeDriver.findElement(By.linkText(identifier));
-            // }
+            switch (find) {
+                case FIND.TEXT:
+                    element = await this.chromeDriver.findElement(By.linkText(identifier));
+                    break;
+                case FIND.CSS:
+                default:
+                    element = await this.chromeDriver.findElement(By.css(identifier));
+                    break;
+            }
 
             // 2: Scroll to element
             await this.chromeDriver.executeScript(
@@ -112,60 +112,84 @@ export class PublicLanding extends BaseTest {
                 element
             );
 
-            // 2: Click element
-            await this.chromeDriver.sleep(CLICK_DELAY);
-            await element.click();
+            /**
+             * 3: Tel link validation
+             * Selenium handles browser context
+             * tel: links are OS protocol handlers
+             * Selenium CAN:
+             *   - read and verify its href attribute
+             *
+             * Selenium CANNOT:
+             *   - open or interact with the system dialer
+             *   - close the OS popup triggered by a tel: link
+             */
+            if (testElement.identifier === this.PUBLIC_LANDING.help_number.identifier) {
+                const href = await element.getAttribute('href');
+
+                // 3.1: Verify href attribute matches help number route
+                if (href === this.PUBLIC_LANDING.help_number.route) {
+                    // 3.1.1: Test - Pass
+                    this.passed += 1;
+                    const success_message = `${id}->success\n`;
+                    await appendFile(this.logFilename, success_message);
+                }
+            }
+            else {
+                // 4: Click element
+                await this.chromeDriver.sleep(CLICK_DELAY);
+                await element.click();
+            }
 
             /**
-             * 3: Validate click
+             * 5: Validate click
              */
-            // 3.1: Set up clicked URL
+            // 5.1: Set up clicked URL
             url = new URL(await this.chromeDriver.getCurrentUrl());
 
-            // 3.2: Domain Check - Homeweb
+            // 5.2: Domain Check - Homeweb
             if (url.origin === HOMEWEB_DOMAIN) {
                 if (url.pathname === route) {
-                    // 3.2.1: Test - Pass
+                    // 5.2.1: Test - Pass
                     this.passed += 1;
                     const success_message = `${id}->success\n`;
                     await appendFile(this.logFilename, success_message);
                 }
             }
-            // 3.3: Domain Check - Quantum API
+            // 5.3: Domain Check - Quantum API
             else if (url.origin === QUANTUM_API_DOMAIN) {
                 if (url.pathname === route) {
-                    // 3.3.1: Test - Pass
+                    // 5.3.1: Test - Pass
                     this.passed += 1;
                     const success_message = `${id}->success\n`;
                     await appendFile(this.logFilename, success_message);
                 }
             }
-            // 3.4: Domain Check - Identity API
+            // 5.4: Domain Check - Identity API
             else if (url.origin === IDENTITY_API_DOMAIN) {
                 const {pathname, search} = url;
                 const path_search = pathname + search;
 
                 if (path_search === route) {
-                    // 3.4.1: Test - Pass
+                    // 5.4.1: Test - Pass
                     this.passed += 1;
                     const success_message = `${id}->success\n`;
                     await appendFile(this.logFilename, success_message);
                 }
             }
-            // 3.5: Domain Check - UNKNOWN
+            // 5.5: Domain Check - UNKNOWN
             else {
                 throw new Error('UNKNOWN ORIGIN');
             }
         }
         catch (error: any) {
-            // 4: Test - Fail
+            // 6: Test - Fail
             this.failed += 1;
             const fail_message = `${id}->onFailure ${error}\n`;
             console.log(fail_message);
             await appendFile(this.logFilename, fail_message);
         }
         finally {
-            // 5: Reset browser state
+            // 7: Reset browser state
             this.testTotal += 1;
             console.log(`${id}->END`);
             await this.reset();
@@ -205,10 +229,10 @@ export class PublicLanding extends BaseTest {
                 await this.runStep(this.PUBLIC_LANDING.resource_3);
 
                 // 7: Test - Toolkit
-                // await this.runStep(this.PUBLIC_LANDING.toolkit);
+                await this.runStep(this.PUBLIC_LANDING.toolkit, FIND.TEXT);
 
                 // 8: Test - Help Number
-                // await this.runStep(this.PUBLIC_LANDING.help_number);
+                await this.runStep(this.PUBLIC_LANDING.help_number);
 
                 // 9: Test - Finish
                 await this.chromeDriver.sleep(CLICK_DELAY);
