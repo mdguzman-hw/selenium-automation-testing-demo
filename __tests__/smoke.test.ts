@@ -1,10 +1,15 @@
+/* MDG 2026 */
+
+/**
+ * Imports
+ */
 import { Browser, Builder, WebDriver } from 'selenium-webdriver';
 import chrome from 'selenium-webdriver/chrome';
-import { HOMEWEB_LANDING_URL_EN, HOMEWEB_LANDING_URL_FR, LANGUAGE } from '../src/common/Constants';
 import { ElementType } from '../src/types/ElementType';
-import { translate } from '../src/common/Utility';
 import { Footer } from '../src/tests/Footer';
 import { Header } from '../src/tests/Header';
+import { HOMEWEB_LANDING_URL_EN, HOMEWEB_LANDING_URL_FR, LANGUAGE } from '../src/common/Constants';
+import { translate } from '../src/common/Utility';
 
 /**
  * Interfaces
