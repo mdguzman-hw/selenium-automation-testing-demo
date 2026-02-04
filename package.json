@@ -6,6 +6,7 @@
   "scripts": {
     "smoke-legacy": "ts-node src/tests/legacy-pure-ts/Smoke",
     "smoke": "jest __tests__/smoke.test.ts",
+    "bat": "jest __tests__/bat-web.ts",
     "test": "jest"
   },
   "dependencies": {
