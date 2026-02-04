@@ -23,6 +23,10 @@ export const enum TAG {
     PUBLIC_LANDING = 'public-landing',
 }
 
+export const enum ID {
+    CONTENT = 'content'
+}
+
 export const enum FIND {
     CSS = 'css',
     TEXT = 'text'
