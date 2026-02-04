@@ -4,7 +4,7 @@
   "main": "index.ts",
   "private": true,
   "scripts": {
-    "smoke-legacy": "ts-node src/tests/Smoke",
+    "smoke-legacy": "ts-node src/tests/legacy-pure-ts/Smoke",
     "smoke": "jest __tests__/smoke.test.ts",
     "test": "jest"
   },

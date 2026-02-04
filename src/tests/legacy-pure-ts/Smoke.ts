@@ -5,11 +5,11 @@
  */
 import { Browser, Builder } from 'selenium-webdriver';
 import chrome from 'selenium-webdriver/chrome';
-import { Footer } from './general/Footer';
-import { generateReport } from '../common/Utility';
-import { Header } from './general/Header';
-import { HOMEWEB_LANDING_URL_EN, HOMEWEB_LANDING_URL_FR, LANGUAGE } from '../common/Constants';
-import { PublicLanding } from './public/PublicLanding';
+import { generateReport } from '../../common/Utility';
+import { HOMEWEB_LANDING_URL_EN, HOMEWEB_LANDING_URL_FR, LANGUAGE } from '../../common/Constants';
+import { LegacyHeader } from './LegacyHeader';
+import { LegacyFooter } from './LegacyFooter';
+import { LegacyPublicLanding } from './LegacyPublicLanding';
 
 /**
  * Smoke - Test
@@ -41,13 +41,13 @@ async function Smoke() {
         // 3.1: Navigate to EN target
         await chromeDriver.get(TARGET_URL_EN)
         // 3.2: Header
-        const header_en = new Header(LANGUAGE.ENGLISH, chromeDriver, TARGET_URL_EN, windowHandle);
+        const header_en = new LegacyHeader(LANGUAGE.ENGLISH, chromeDriver, TARGET_URL_EN, windowHandle);
         await header_en.runTests();
         // 3.3: Footer
-        const footer_en = new Footer(LANGUAGE.ENGLISH, chromeDriver, TARGET_URL_EN, windowHandle);
+        const footer_en = new LegacyFooter(LANGUAGE.ENGLISH, chromeDriver, TARGET_URL_EN, windowHandle);
         await footer_en.runTests();
         // 3.4: Public - Landing
-        const public_landing_en = new PublicLanding(LANGUAGE.ENGLISH, chromeDriver, TARGET_URL_EN, windowHandle);
+        const public_landing_en = new LegacyPublicLanding(LANGUAGE.ENGLISH, chromeDriver, TARGET_URL_EN, windowHandle);
         await public_landing_en.runTests();
 
         /**
@@ -56,13 +56,13 @@ async function Smoke() {
         // 4.1: Navigate to FR target
         await chromeDriver.get(TARGET_URL_FR)
         // 4.2: Header
-        const header_fr = new Header(LANGUAGE.FRENCH, chromeDriver, TARGET_URL_FR, windowHandle);
+        const header_fr = new LegacyHeader(LANGUAGE.FRENCH, chromeDriver, TARGET_URL_FR, windowHandle);
         await header_fr.runTests();
         // 4.3: Footer
-        const footer_fr = new Footer(LANGUAGE.FRENCH, chromeDriver, TARGET_URL_FR, windowHandle);
+        const footer_fr = new LegacyFooter(LANGUAGE.FRENCH, chromeDriver, TARGET_URL_FR, windowHandle);
         await footer_fr.runTests();
         // 4.4: Public - Landing
-        const public_landing_fr = new PublicLanding(LANGUAGE.FRENCH, chromeDriver, TARGET_URL_FR, windowHandle);
+        const public_landing_fr = new LegacyPublicLanding(LANGUAGE.FRENCH, chromeDriver, TARGET_URL_FR, windowHandle);
         await public_landing_fr.runTests();
 
         /**

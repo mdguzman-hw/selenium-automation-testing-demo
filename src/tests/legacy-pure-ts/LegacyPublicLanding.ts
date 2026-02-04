@@ -5,7 +5,7 @@
  */
 
 import { appendFile } from 'node:fs/promises';
-import { BaseTest } from '../BaseTest';
+import { BaseTest } from './BaseTest';
 import { By, WebDriver, WebElement } from 'selenium-webdriver';
 import { CLICK_DELAY, FIND, HOMEWEB_DOMAIN, IDENTITY_API_DOMAIN, LANGUAGE, QUANTUM_API_DOMAIN, TAG } from '../../common/Constants';
 import { ElementType } from '../../types/ElementType';
@@ -27,7 +27,7 @@ interface PublicLandingElements {
 /**
  * Public Landing - Anonymous Tests
  */
-export class PublicLanding extends BaseTest {
+export class LegacyPublicLanding extends BaseTest {
     /**
      * Member Variables
      */
@@ -197,7 +197,7 @@ export class PublicLanding extends BaseTest {
     }// End of runStep()
 
     /**
-     * Action: Run Footer Tests
+     * Action: Run Public Landing Tests
      */
     public async runTests() {
         const startMessage = `PublicLanding::runTests::targetURL->${this.targetURL}\n`;

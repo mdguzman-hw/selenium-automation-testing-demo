@@ -3,8 +3,8 @@
 /**
  * Imports
  */
-import { generateLogFileName, setLanguage } from '../common/Utility';
-import { LANGUAGE } from '../common/Constants';
+import { generateLogFileName, setLanguage } from '../../common/Utility';
+import { LANGUAGE } from '../../common/Constants';
 import { WebDriver } from 'selenium-webdriver';
 
 /**

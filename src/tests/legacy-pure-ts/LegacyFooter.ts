@@ -4,7 +4,7 @@
  * Imports
  */
 import { appendFile } from 'node:fs/promises';
-import { BaseTest } from '../BaseTest';
+import { BaseTest } from './BaseTest';
 import { By, WebDriver } from 'selenium-webdriver';
 import { CLICK_DELAY, HOMEWEB_DOMAIN, HOMEWOOD_DOMAIN, LANGUAGE, TAG } from '../../common/Constants';
 import { ElementType } from '../../types/ElementType';
@@ -23,7 +23,7 @@ interface FooterElements {
 /**
  * Footer - Anonymous Tests
  */
-export class Footer extends BaseTest {
+export class LegacyFooter extends BaseTest {
     /**
      * Member Variables
      */
