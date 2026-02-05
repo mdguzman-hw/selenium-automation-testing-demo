@@ -4,10 +4,10 @@
  * Imports
  */
 import { appendFile } from 'node:fs/promises';
-import { BaseTest } from './legacy-pure-ts/BaseTest';
+import { BaseTest } from './BaseTest';
 import { By, WebDriver } from 'selenium-webdriver';
-import { HOMEWEB_DOMAIN, LANGUAGE, QUANTUM_API_DOMAIN, TAG } from '../common/Constants';
 import { ElementType } from '../types/ElementType';
+import { HOMEWEB_DOMAIN, LANGUAGE, QUANTUM_API_DOMAIN, TAG } from '../common/Constants';
 
 /**
  * Header - Anonymous Tests
