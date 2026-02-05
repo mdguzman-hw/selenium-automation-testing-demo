@@ -12,6 +12,9 @@ yarn-error.log
 # Logs
 logs/
 
+# Credentials
+/CREDENTIALS.json
+
 # Yarn
 .yarn/*
 !.yarn/patches
