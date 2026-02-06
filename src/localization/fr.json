@@ -1,8 +1,8 @@
 {
-  "footer_id_about": "FOOTER-ANON-FR-002",
-  "footer_id_accessibility": "FOOTER-ANON-FR-005",
-  "footer_id_privacy": "FOOTER-ANON-FR-004",
-  "footer_id_terms": "FOOTER-ANON-FR-003",
+  "footer_id_about": "FOOTER-ANON-FR-001",
+  "footer_id_accessibility": "FOOTER-ANON-FR-004",
+  "footer_id_privacy": "FOOTER-ANON-FR-003",
+  "footer_id_terms": "FOOTER-ANON-FR-002",
   "footer_identifier_about": "À propos de Homewood Santé",
   "footer_identifier_accessibility": "Accessibilité",
   "footer_identifier_privacy": "Politique de confidentialité",
@@ -12,15 +12,20 @@
   "footer_route_privacy": "/fr/privacy-policy",
   "footer_route_terms": "/fr/terms-of-service",
 
-  "header_id_button": "HEADER-ANON-FR-004",
-  "header_id_logo": "HEADER-ANON-FR-002",
-  "header_id_toggle": "HEADER-ANON-FR-003",
+  "header_id_button": "HEADER-ANON-FR-003",
+  "header_id_logo": "HEADER-ANON-FR-001",
+  "header_id_toggle": "HEADER-ANON-FR-002",
   "header_identifier_button": "[aria-label=\"Se connecter\"]",
   "header_identifier_logo": "[aria-label=\"Logo Homewood\"]",
   "header_identifier_toggle": "[aria-label=\"Basculer la langue en EN\"]",
   "header_route_button": "/fr/login",
   "header_route_logo": "/fr",
   "header_route_toggle": "/en",
+  "header_id_menu": "HEADER-AUTH-FR-001",
+  "header_identifier_menu": "[aria-label=\"Basculer le menu du compte\"]",
+  "header_id_logout": "HEADER-AUTH-FR-002",
+  "header_identifier_logout": "[aria-label=\"Se déconnecter\"]",
+  "header_route_logout": "/fr",
 
   "public_landing_id_sign_in": "PUBLIC-LANDING-ANON-FR-003",
   "public_landing_id_register": "PUBLIC-LANDING-ANON-FR-004",
@@ -46,7 +51,12 @@
 
   "bat_id_navigate": "BAT-WEB-FR-001",
   "bat_id_resources": "BAT-WEB-FR-002",
-  "bat_id_login": "BAT-WEB-FR-003",
+  "bat_id_login_personal": "BAT-WEB-FR-003",
+  "bat_id_authenticated_resource": "BAT-WEB-FR-004",
+  "bat_id_sentio": "BAT-WEB-FR-005",
+  "bat_id_logout": "BAT-WEB-FR-006",
+  "bat_id_login_demo": "BAT-WEB-FR-007",
+  "bat_id_kickouts": "BAT-WEB-FR-008",
 
   "login_id_email": "LOGIN-FR-001",
   "login_id_password": "LOGIN-FR-002",
@@ -55,5 +65,14 @@
   "login_identifier_submit": "[type=\"submit\"]",
   "login_next": "Suivant",
   "login_sign_in": "Se connecter",
-  "login_sign_in_route": "/app/fr/homeweb/dashboard"
+  "login_sign_in_route": "/app/fr/homeweb/dashboard",
+
+  "authenticated_id_access_sentio": "AUTH-FR-001",
+  "authenticated_id_access_childcare": "AUTH-FR-002",
+  "authenticated_id_access_eldercare": "AUTH-FR-003",
+  "authenticated_id_access_hra": "AUTH-FR-004",
+  "authenticated_identifier_access_sentio": "Accéder à Sentio",
+  "authenticated_identifier_access_childcare": "Accéder Localisateur de ressources pour les soins aux enfants – Soutien Étapes-vie",
+  "authenticated_identifier_access_eldercare": "Accéder Localisateur de ressources pour les soins aux aînés – Soutien Étapes-vie",
+  "authenticated_identifier_access_hra": "Accéder Le Questionnaire santé"
 }
