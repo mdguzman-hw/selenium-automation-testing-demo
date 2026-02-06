@@ -6,7 +6,7 @@
 import { appendFile } from 'node:fs/promises';
 import { BaseTest } from './BaseTest';
 import { By, until, WebDriver } from 'selenium-webdriver';
-import { HOMEWEB_DOMAIN, HOMEWOOD_DOMAIN, LANGUAGE, TAG } from '../common/Constants';
+import { HOMEWEB_DOMAIN, HOMEWOOD_DOMAIN, LANGUAGE, TAG, TIMEOUT } from '../common/Constants';
 import { ElementType } from '../types/ElementType';
 
 /**
@@ -53,7 +53,7 @@ export class Footer extends BaseTest {
         );
 
         // 3: Wait until element is visible and enabled, then click
-        await this.chromeDriver.sleep(500);
+        await this.chromeDriver.sleep(TIMEOUT.S_HALF);
         await this.chromeDriver.wait(until.elementIsVisible(element), 5000);
         await this.chromeDriver.wait(until.elementIsEnabled(element), 5000);
         await element.click();

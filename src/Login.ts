@@ -25,6 +25,11 @@ export class Login extends BaseTest {
         super(locale, driver, target, TAG.LOGIN, handle);
     }// End of constructor()
 
+    /**
+     * Test: Input
+     * @param testElement {ElementType}
+     * @param input {string}
+     */
     public async testInput(testElement: ElementType, input: string) {
         const {id, identifier} = testElement;
         let element: WebElement;
@@ -53,6 +58,10 @@ export class Login extends BaseTest {
         await appendFile(this.logFilename, success_message);
     }
 
+    /**
+     * Test: Button
+     * @param buttonElement {ElementType}
+     */
     public async testButton(buttonElement: ElementType) {
         const {id, identifier, route} = buttonElement;
 
@@ -106,5 +115,6 @@ export class Login extends BaseTest {
         await this.chromeDriver.wait(until.elementLocated(By.id(ID.CONTENT)))
         const success_message = `${id}->success\n`;
         await appendFile(this.logFilename, success_message);
-    }
-}
+    }// End of testButton()
+}// End of class
+// End of file
