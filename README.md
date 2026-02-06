@@ -21,11 +21,12 @@ MDG 2026
 # Test Suites
 ### ALL
 - yarn test
-### SMOKE TEST [INACTIVE | LEGACY - PURE JS]
+### SMOKE TEST <span style="color:#4055f5">[ LEGACY ]</span>
+Pure TypeScript
 - *yarn smoke-legacy*
-### SMOKE TEST [INCOMPLETE]
+### SMOKE TEST <span style="color:#948a8a">[ INCOMPLETE ]</span>
 - *yarn smoke*
-### BUILD ACCEPTANCE TEST [IN PROGRESS]
+### BUILD ACCEPTANCE TEST <span style="color:#defa64">[ IN PROGRESS ]</span>
 - *mkdir logs*
 - *touch CREDENTIALS.json*
 ```
@@ -42,5 +43,5 @@ CREDENTIALS.json template
 }
 ```
 - yarn bat
-### REGRESSION [TBD]
+### REGRESSION <span style="color:#080808">[ TBD ]</span>
 - TBD
